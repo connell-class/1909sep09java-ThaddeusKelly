@@ -1,6 +1,7 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -84,18 +85,24 @@ public class EvaluationService {
 		}
 
 		public boolean isEquilateral() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if(sideOne==sideTwo && sideOne==sideThree)
+				return true;
+			else
+				return false;
 		}
 
 		public boolean isIsosceles() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if(sideOne == sideTwo || sideOne == sideThree || sideTwo == sideThree)
+				return true;
+			else
+				return false;
 		}
 
 		public boolean isScalene() {
-			// TODO Write an implementation for this method declaration
-			return false;
+			if(sideOne != sideTwo && sideOne != sideThree)
+				return true;
+			else
+				return false;
 		}
 
 	}
@@ -116,8 +123,37 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		string=string.toUpperCase();
+		int score=0;
+		int i;
+		for(i=0; i<string.length(); i++){
+			switch(string.charAt(i)){
+				case 'A': case 'E': case 'I': case 'O': case 'U': case 'L': case 'N': case 'R': case 'S': case 'T':
+					score=score+1;
+					break;
+				case 'D': case 'G':
+					score=score+2;
+					break;
+				case 'B': case 'C': case 'M': case 'P':
+					score=score+3;
+					break;
+				case 'F': case 'H': case 'V': case 'W': case 'Y':
+					score=score+4;
+					break;
+				case 'K':
+					score=score+5;
+					break;
+				case 'J': case 'X':
+					score=score+8;
+					break;
+				case 'Q': case 'Z':
+					score=score+10;
+					break;
+				default:
+					break;
+			}
+		}
+		return score;
 	}
 
 	/**
@@ -246,8 +282,17 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		char[] pigLatin=new char[string.length()];
+		string=string.toUpperCase();
+		if(string.charAt(0) == 'A' || string.charAt(0) == 'E' || string.charAt(0) == 'I' || string.charAt(0) == 'O' || string.charAt(0) == 'U' || string.charAt(0) == 'Y')
+			return string + "ay";
+		else {
+			for (int i = 1, j=0; i < string.length(); i++, j++) {
+				pigLatin[j] = string.charAt(i);
+			}
+			pigLatin[string.length()]=string.charAt(0);
+			return new String (pigLatin.toString()+"ay");
+		}
 	}
 
 	/**
@@ -320,8 +365,57 @@ public class EvaluationService {
 		}
 
 		public String rotate(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			string=string.toUpperCase();
+			char[] translated = new char[string.length()];
+			HashMap<Integer, Character> hm = new HashMap <>();
+			HashMap<Character, Integer> alphabet = new HashMap<>();
+			int letterKey = 0;
+			int translator = 0;
+			//storage for translating the input
+			hm.put(1, 'A');
+			hm.put(2, 'B');
+			hm.put(3, 'C');
+			hm.put(4, 'D');
+			hm.put(5, 'E');
+			hm.put(6, 'F');
+			hm.put(7, 'G');
+			hm.put(8, 'H');
+			hm.put(9, 'I');
+			hm.put(10, 'J');
+			hm.put(11, 'K');
+			hm.put(12, 'L');
+			hm.put(13, 'M');
+			hm.put(14, 'N');
+			hm.put(15, 'O');
+			hm.put(16, 'P');
+			hm.put(17, 'Q');
+			hm.put(18, 'R');
+			hm.put(19, 'S');
+			hm.put(20, 'T');
+			hm.put(21, 'U');
+			hm.put(22, 'V');
+			hm.put(23, 'W');
+			hm.put(24, 'X');
+			hm.put(25, 'Y');
+			hm.put(26, 'Z');
+			for (int u = 1; u <=26; u++) {
+				alphabet.put(hm.get(u), u);
+			}
+			for (int i=1; i<26; i++) {
+				if (i+key>=26) {
+					letterKey=i+key-26;
+				}
+				else {
+					letterKey=i+key;
+				}
+				hm.replace(letterKey, hm.get(i));
+			}
+			hm.replace(key, 'Z');
+			for (int j=0; j<string.length(); j++) {
+				translator = alphabet.get(string.charAt(j));
+				translated[j]=hm.get(translator);
+			}
+			return translated.toString();
 		}
 
 	}
@@ -420,7 +514,7 @@ public class EvaluationService {
 	}
 
 	/**
-	 * 16. Determine if a sentence is a pangram. A pangram (Greek: παν γράμμα, pan
+	 * 16. Determine if a sentence is a pangram. A pangram (Greek: pan
 	 * gramma, "every letter") is a sentence using every letter of the alphabet at
 	 * least once. The best known English pangram is:
 	 * 
@@ -516,21 +610,17 @@ public class EvaluationService {
 	 * Add two numbers together.
 	 * 
 	 * What is 5 plus 13?
-	 * 
 	 * 18
 	 * 
 	 * Now, perform the other three operations.
 	 * 
-	 * What is 7 minus 5?
-	 * 
+	 * What is 7 minus 5? 
 	 * 2
 	 * 
 	 * What is 6 multiplied by 4?
-	 * 
 	 * 24
 	 * 
 	 * What is 25 divided by 5?
-	 * 
 	 * 5
 	 * 
 	 * @param string
