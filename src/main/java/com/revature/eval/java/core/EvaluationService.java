@@ -1,9 +1,7 @@
 package com.revature.eval.java.core;
 
 import java.time.temporal.Temporal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class EvaluationService {
 
@@ -16,7 +14,7 @@ public class EvaluationService {
 	 */
 	public String reverse(String string) {
 		char[] reversed = new char[string.length()];
-		for (int i = reversed.length - 1, j=0; i >= 0; i--, j++) {
+		for (int i = reversed.length - 1, j = 0; i >= 0; i--, j++) {
 			reversed[j] = string.charAt(i);
 		}
 		return new String(reversed);
@@ -31,8 +29,19 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String acronym(String phrase) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		phrase = phrase.toUpperCase();
+		boolean space = false;
+		List<Character> acronym = new LinkedList<>();
+		acronym.add(phrase.charAt(0));
+		for (int i = 0; i < phrase.length(); i++) {
+			if (space == true && phrase.charAt(i) != ' ' || phrase.charAt(1) != '-') {
+				acronym.add(phrase.charAt(i));
+				space = false;
+			} else {
+				space = true;
+			}
+		}
+		return new String(/* list */);
 	}
 
 	/**
@@ -45,6 +54,7 @@ public class EvaluationService {
 	 *
 	 */
 	static class Triangle {
+		//TODO Done
 		private double sideOne;
 		private double sideTwo;
 		private double sideThree;
@@ -85,21 +95,21 @@ public class EvaluationService {
 		}
 
 		public boolean isEquilateral() {
-			if(sideOne==sideTwo && sideOne==sideThree)
+			if (sideOne == sideTwo && sideOne == sideThree)
 				return true;
 			else
 				return false;
 		}
 
 		public boolean isIsosceles() {
-			if(sideOne == sideTwo || sideOne == sideThree || sideTwo == sideThree)
+			if (sideOne == sideTwo || sideOne == sideThree || sideTwo == sideThree)
 				return true;
 			else
 				return false;
 		}
 
 		public boolean isScalene() {
-			if(sideOne != sideTwo && sideOne != sideThree)
+			if (sideOne != sideTwo && sideOne != sideThree)
 				return true;
 			else
 				return false;
@@ -123,34 +133,54 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getScrabbleScore(String string) {
-		string=string.toUpperCase();
-		int score=0;
+		//TODO Done
+		string = string.toUpperCase();
+		int score = 0;
 		int i;
-		for(i=0; i<string.length(); i++){
-			switch(string.charAt(i)){
-				case 'A': case 'E': case 'I': case 'O': case 'U': case 'L': case 'N': case 'R': case 'S': case 'T':
-					score=score+1;
-					break;
-				case 'D': case 'G':
-					score=score+2;
-					break;
-				case 'B': case 'C': case 'M': case 'P':
-					score=score+3;
-					break;
-				case 'F': case 'H': case 'V': case 'W': case 'Y':
-					score=score+4;
-					break;
-				case 'K':
-					score=score+5;
-					break;
-				case 'J': case 'X':
-					score=score+8;
-					break;
-				case 'Q': case 'Z':
-					score=score+10;
-					break;
-				default:
-					break;
+		for (i = 0; i < string.length(); i++) {
+			switch (string.charAt(i)) {
+			case 'A':
+			case 'E':
+			case 'I':
+			case 'O':
+			case 'U':
+			case 'L':
+			case 'N':
+			case 'R':
+			case 'S':
+			case 'T':
+				score = score + 1;
+				break;
+			case 'D':
+			case 'G':
+				score = score + 2;
+				break;
+			case 'B':
+			case 'C':
+			case 'M':
+			case 'P':
+				score = score + 3;
+				break;
+			case 'F':
+			case 'H':
+			case 'V':
+			case 'W':
+			case 'Y':
+				score = score + 4;
+				break;
+			case 'K':
+				score = score + 5;
+				break;
+			case 'J':
+			case 'X':
+				score = score + 8;
+				break;
+			case 'Q':
+			case 'Z':
+				score = score + 10;
+				break;
+			default:
+				break;
 			}
 		}
 		return score;
@@ -188,8 +218,31 @@ public class EvaluationService {
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
 	public String cleanPhoneNumber(String string) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		//TODO turn an array into a proper set of numbers
+		boolean countryCodeSearch = false;
+		char[] number = new char[10];
+		int numLoc = 0;
+
+		for (int i = 0; i < string.length(); i++) {
+			switch (string.charAt(i)) {
+			case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9': case '0': {
+				if (countryCodeSearch == false & string.charAt(i) == '1') {
+					System.out.println("here");
+				}
+				else {
+					System.out.println("no, here");
+					number[numLoc] = string.charAt(i);
+					numLoc++;
+				}
+				countryCodeSearch = true;
+				break;
+			}
+			default:
+				System.out.println("there");
+				break;
+			}
+		}
+		return new String(Arrays.toString(number));
 	}
 
 	/**
@@ -282,16 +335,35 @@ public class EvaluationService {
 	 * @return
 	 */
 	public String toPigLatin(String string) {
-		char[] pigLatin=new char[string.length()];
-		string=string.toUpperCase();
-		if(string.charAt(0) == 'A' || string.charAt(0) == 'E' || string.charAt(0) == 'I' || string.charAt(0) == 'O' || string.charAt(0) == 'U' || string.charAt(0) == 'Y')
+		char[] pigLatin = new char[string.length()];
+		string = string.toLowerCase();
+		if (string.charAt(0) == 'a' || string.charAt(0) == 'e' || string.charAt(0) == 'i' || string.charAt(0) == 'o'
+				|| string.charAt(0) == 'u')
 			return string + "ay";
-		else {
-			for (int i = 1, j=0; i < string.length(); i++, j++) {
+		else if(string.charAt(1) == 'h') {
+			pigLatin[string.length()-2] = string.charAt(0);
+			pigLatin[string.length()-1] = string.charAt(1);
+			for (int i = 2, j = 0; i < string.length(); i++, j++) {
 				pigLatin[j] = string.charAt(i);
 			}
-			pigLatin[string.length()]=string.charAt(0);
-			return new String (pigLatin.toString()+"ay");
+			return new String(pigLatin) + "ay";
+		}
+		//TODO SCH
+		else if(string.charAt(0) == 's' && string.charAt(1) == 'c' && string.charAt(0) == 'h') {
+			pigLatin[string.length()-3] = string.charAt(0);
+			pigLatin[string.length()-2] = string.charAt(1);
+			pigLatin[string.length()-1] = string.charAt(2);
+			for (int i = 3, j = 0; i < string.length(); i++, j++) {
+				pigLatin[j] = string.charAt(i);
+			}
+			return new String(pigLatin) + "ay";
+		}
+		else {
+			for (int i = 1, j = 0; i < string.length(); i++, j++) {
+				pigLatin[j] = string.charAt(i);
+				pigLatin[string.length()-1] = string.charAt(0);
+			}
+			return new String(pigLatin) + "ay";
 		}
 	}
 
@@ -326,7 +398,8 @@ public class EvaluationService {
 	 * @return
 	 */
 	public List<Long> calculatePrimeFactorsOf(long l) {
-		// TODO Write an implementation for this method declaration
+		List<long[]> list = new LinkedList<>();
+		// TODO start over, doesn't work
 		return null;
 	}
 
@@ -365,57 +438,60 @@ public class EvaluationService {
 		}
 
 		public String rotate(String string) {
-			string=string.toUpperCase();
+			string = string.toLowerCase();
 			char[] translated = new char[string.length()];
-			HashMap<Integer, Character> hm = new HashMap <>();
+			HashMap<Integer, Character> hm = new HashMap<>();
 			HashMap<Character, Integer> alphabet = new HashMap<>();
 			int letterKey = 0;
 			int translator = 0;
-			//storage for translating the input
-			hm.put(1, 'A');
-			hm.put(2, 'B');
-			hm.put(3, 'C');
-			hm.put(4, 'D');
-			hm.put(5, 'E');
-			hm.put(6, 'F');
-			hm.put(7, 'G');
-			hm.put(8, 'H');
-			hm.put(9, 'I');
-			hm.put(10, 'J');
-			hm.put(11, 'K');
-			hm.put(12, 'L');
-			hm.put(13, 'M');
-			hm.put(14, 'N');
-			hm.put(15, 'O');
-			hm.put(16, 'P');
-			hm.put(17, 'Q');
-			hm.put(18, 'R');
-			hm.put(19, 'S');
-			hm.put(20, 'T');
-			hm.put(21, 'U');
-			hm.put(22, 'V');
-			hm.put(23, 'W');
-			hm.put(24, 'X');
-			hm.put(25, 'Y');
-			hm.put(26, 'Z');
-			for (int u = 1; u <=26; u++) {
+			// storage for translating the input
+			hm.put(1, 'a');
+			hm.put(2, 'b');
+			hm.put(3, 'c');
+			hm.put(4, 'd');
+			hm.put(5, 'e');
+			hm.put(6, 'f');
+			hm.put(7, 'g');
+			hm.put(8, 'h');
+			hm.put(9, 'i');
+			hm.put(10, 'j');
+			hm.put(11, 'k');
+			hm.put(12, 'l');
+			hm.put(13, 'm');
+			hm.put(14, 'n');
+			hm.put(15, 'o');
+			hm.put(16, 'p');
+			hm.put(17, 'q');
+			hm.put(18, 'r');
+			hm.put(19, 's');
+			hm.put(20, 't');
+			hm.put(21, 'u');
+			hm.put(22, 'v');
+			hm.put(23, 'w');
+			hm.put(24, 'x');
+			hm.put(25, 'y');
+			hm.put(26, 'z');
+			for (int u = 1; u <= 26; u++) {
+				System.out.println(hm.get(u));
 				alphabet.put(hm.get(u), u);
 			}
-			for (int i=1; i<26; i++) {
-				if (i+key>=26) {
-					letterKey=i+key-26;
-				}
-				else {
-					letterKey=i+key;
+			// creates a reversed reference of hm. I just didn't feel like typing all of
+			// those .puts backwards
+			for (int i = 1; i < 26; i++) {
+				if (i + key >= 26) {
+					letterKey = i + key - 26;
+				} else {
+					letterKey = i + key;
 				}
 				hm.replace(letterKey, hm.get(i));
 			}
-			hm.replace(key, 'Z');
-			for (int j=0; j<string.length(); j++) {
+			hm.replace(key, 'z');
+			for (int j = 0; j < string.length(); j++) {
 				translator = alphabet.get(string.charAt(j));
-				translated[j]=hm.get(translator);
+				translated[j] = hm.get(translator);
 			}
-			return translated.toString();
+			//TODO needs to return each letter in its proper capitalization
+			return new String(translated);
 		}
 
 	}
@@ -433,8 +509,20 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int calculateNthPrime(int i) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		// I don't know how to do this properly yet, so until then BRUTE FORCE TIME
+		int number = 2;
+		int prime = 0;
+		int divider = 2;
+		while (number != i) {
+			for (divider = 2; divider < number; divider++) {
+				if (number == 2 || number % divider != 0 && number == divider + 1) {
+					prime = number;
+					break;
+				}
+			}
+			number++;
+		}
+		return prime;
 	}
 
 	/**
@@ -470,8 +558,56 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String encode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			string = string.toLowerCase();
+			HashMap<Character, Integer> alphabet = new HashMap<>();
+			HashMap<Integer, Character> hm = new HashMap<>();
+			hm.put(1, 'a');
+			hm.put(2, 'b');
+			hm.put(3, 'c');
+			hm.put(4, 'd');
+			hm.put(5, 'e');
+			hm.put(6, 'f');
+			hm.put(7, 'g');
+			hm.put(8, 'h');
+			hm.put(9, 'i');
+			hm.put(10, 'j');
+			hm.put(11, 'k');
+			hm.put(12, 'l');
+			hm.put(13, 'm');
+			hm.put(14, 'n');
+			hm.put(15, 'o');
+			hm.put(16, 'p');
+			hm.put(17, 'q');
+			hm.put(18, 'r');
+			hm.put(19, 's');
+			hm.put(20, 't');
+			hm.put(21, 'u');
+			hm.put(22, 'v');
+			hm.put(23, 'w');
+			hm.put(24, 'x');
+			hm.put(25, 'y');
+			hm.put(26, 'z');
+			for (int u = 1; u <= 26; u++) {
+				alphabet.put(hm.get(u), u);
+			}
+			char[] translated = new char[string.length()];
+			for (int i = 0; i < string.length(); i++) {
+				if (alphabet.get(string.charAt(i)) <= 13) {
+					// below M: doubles the difference and adds it to the letter's value
+					translated[i] = hm
+							.get(alphabet.get(string.charAt(i)) + ((14 - alphabet.get(string.charAt(i))) * 2));
+				} else if (alphabet.get(string.charAt(i)) >= 14) {
+					// over N: doubles the difference and subtracts it from the letter's value
+					translated[i] = hm
+							.get(alphabet.get(string.charAt(i)) - ((alphabet.get(string.charAt(i)) - 13) * 2));
+				} else {
+					// everything else: leaves it be
+					translated[i] = string.charAt(i);
+				}
+				// TODO it still needs to remove spaces and other symbols right?
+				// Guess it needs to be a list instead of an array
+			}
+			return new String(translated);
 		}
 
 		/**
@@ -481,8 +617,8 @@ public class EvaluationService {
 		 * @return
 		 */
 		public static String decode(String string) {
-			// TODO Write an implementation for this method declaration
-			return null;
+			String end = new String(encode(string));
+			return end;
 		}
 	}
 
@@ -509,14 +645,47 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isValidIsbn(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		List<Integer> numbers = new LinkedList<>();
+		int sum = 0;
+		// add all numbers to the list
+		for (int i = 0; i < string.length(); i++) {
+			switch (string.charAt(i)) {
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9':
+			case '0':
+				numbers.add(Character.getNumericValue(string.charAt(i)));
+				break;
+			case 'X':
+				numbers.add(10);
+				break;
+			default:
+				break;
+			}
+		}
+		// check to make sure there are the right amount of numbers
+		if (numbers.size() != 10)
+			return false;
+		// otherwise, do the equation
+		for (int j = 0; j < numbers.size(); j++) {
+			sum = sum + (numbers.get(j) * j);
+		}
+		if (sum % 10 == 0)
+			return true;
+		else
+			return false;
 	}
 
 	/**
-	 * 16. Determine if a sentence is a pangram. A pangram (Greek: pan
-	 * gramma, "every letter") is a sentence using every letter of the alphabet at
-	 * least once. The best known English pangram is:
+	 * 16. Determine if a sentence is a pangram. A pangram (Greek: pan gramma,
+	 * "every letter") is a sentence using every letter of the alphabet at least
+	 * once. The best known English pangram is:
 	 * 
 	 * The quick brown fox jumps over the lazy dog.
 	 * 
@@ -558,8 +727,18 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getSumOfMultiples(int i, int[] set) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		List<Integer> multiples = new LinkedList<>();
+		int k;
+		int sum = 0;
+		for(int j = 0; j < set.length; j++) {
+			for(k = 1; k < i; k++) {
+				if(k%set[j]==0) {
+					multiples.add(k);
+				}
+			}
+		}
+		//find sum of multiples
+		return sum;
 	}
 
 	/**
@@ -599,8 +778,28 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isLuhnValid(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		//list required
+		int finalValue = 0;
+		for (int i = 0; i < string.length(); i++) {
+			// testing for every other digit
+			if ((i+1) % 2 == 0) {
+				// testing if doubled number will be 10 or greater
+				if (Character.getNumericValue(string.charAt(i)) > 10) {
+					finalValue = finalValue + (Character.getNumericValue(string.charAt(i)) * 2) - 9;
+				} else {
+					finalValue = finalValue + (Character.getNumericValue(string.charAt(i)) * 2);
+				}
+			} else {
+				finalValue = finalValue + Character.getNumericValue(string.charAt(i));
+			}
+			System.out.println(finalValue);
+		}
+		if (finalValue % 10 == 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	/**
@@ -609,19 +808,15 @@ public class EvaluationService {
 	 * 
 	 * Add two numbers together.
 	 * 
-	 * What is 5 plus 13?
-	 * 18
+	 * What is 5 plus 13? 18
 	 * 
 	 * Now, perform the other three operations.
 	 * 
-	 * What is 7 minus 5? 
-	 * 2
+	 * What is 7 minus 5? 2
 	 * 
-	 * What is 6 multiplied by 4?
-	 * 24
+	 * What is 6 multiplied by 4? 24
 	 * 
-	 * What is 25 divided by 5?
-	 * 5
+	 * What is 25 divided by 5? 5
 	 * 
 	 * @param string
 	 * @return
