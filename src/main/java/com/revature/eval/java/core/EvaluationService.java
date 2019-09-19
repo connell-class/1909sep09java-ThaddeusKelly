@@ -4,6 +4,8 @@ import java.time.temporal.Temporal;
 import java.util.*;
 
 public class EvaluationService {
+	
+	//Finished: 1, 2, 3, 4, 5, 8, 18
 
 	/**
 	 * 1. Without using the StringBuilder or StringBuffer class, write a method that
@@ -21,27 +23,25 @@ public class EvaluationService {
 	}
 
 	/**
-	 * 2. Convert a phrase to its acronym. Techies love their TLA (Three Letter
-	 * Acronyms)! Help generate some jargon by writing a program that converts a
-	 * long name like Portable Network Graphics to its acronym (PNG).
-	 * 
-	 * @param phrase
-	 * @return
 	 */
+	//TODO not sure what happened to the question, but done
 	public String acronym(String phrase) {
 		phrase = phrase.toUpperCase();
 		boolean space = false;
-		List<Character> acronym = new LinkedList<>();
-		acronym.add(phrase.charAt(0));
+		StringBuilder acronym = new StringBuilder("");
+		acronym.append(phrase.charAt(0));
 		for (int i = 0; i < phrase.length(); i++) {
-			if (space == true && phrase.charAt(i) != ' ' || phrase.charAt(1) != '-') {
-				acronym.add(phrase.charAt(i));
+			if(space == true && Character.isLetter(phrase.charAt(i))) {
+				acronym.append(phrase.charAt(i));
 				space = false;
-			} else {
+				continue;
+			}
+			if (phrase.charAt(i) == ' ' || phrase.charAt(i) == '-') {
 				space = true;
+				continue;
 			}
 		}
-		return new String(/* list */);
+		return new String(acronym);
 	}
 
 	/**
@@ -218,19 +218,22 @@ public class EvaluationService {
 	 * NANP-countries, only 1 is considered a valid country code.
 	 */
 	public String cleanPhoneNumber(String string) {
-		//TODO turn an array into a proper set of numbers
+		//TODO done
 		boolean countryCodeSearch = false;
 		char[] number = new char[10];
 		int numLoc = 0;
 
 		for (int i = 0; i < string.length(); i++) {
+			if(Character.isLetter(string.charAt(i))) {
+				throw new IllegalArgumentException("Non-numeric Characters");
+			}
 			switch (string.charAt(i)) {
 			case '1': case '2': case '3': case '4': case '5': case '6': case '7': case '8': case '9': case '0': {
 				if (countryCodeSearch == false & string.charAt(i) == '1') {
-					System.out.println("here");
 				}
 				else {
-					System.out.println("no, here");
+					if (numLoc == 10)
+						throw new IllegalArgumentException("Too many numbers");
 					number[numLoc] = string.charAt(i);
 					numLoc++;
 				}
@@ -238,11 +241,15 @@ public class EvaluationService {
 				break;
 			}
 			default:
-				System.out.println("there");
 				break;
 			}
 		}
-		return new String(Arrays.toString(number));
+		StringBuilder builder = new StringBuilder("");
+		for(int j = 0; j < number.length; j++) {
+			builder.append(number[j]);
+		}
+		String toReturn = new String(builder);
+		return toReturn;
 	}
 
 	/**
@@ -255,7 +262,23 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Map<String, Integer> wordCount(String string) {
-		// TODO Write an implementation for this method declaration
+		boolean space = true;
+		int wordStart = 0;
+		int wordEnd = 0;
+		Map<String, Integer> counter = new HashMap<>();
+		for(int j = 0; j<string.length(); j++) {
+			if(Character.isLetter(string.charAt(j)) && space == true) {
+				wordStart = j;
+				space = false;
+				System.out.println(wordStart);
+			}
+			else if((j == string.length() - 1 && string.charAt(j)!=' ') || string.charAt(j+1)==' ') {
+				space = true;
+				wordEnd = j+1;
+					//TODO if that key is not already in counter:
+				counter.put(string.substring(wordStart, wordEnd), 1);
+			}
+		}
 		return null;
 	}
 
@@ -334,37 +357,67 @@ public class EvaluationService {
 	 * @param string
 	 * @return
 	 */
-	public String toPigLatin(String string) {
-		char[] pigLatin = new char[string.length()];
-		string = string.toLowerCase();
-		if (string.charAt(0) == 'a' || string.charAt(0) == 'e' || string.charAt(0) == 'i' || string.charAt(0) == 'o'
-				|| string.charAt(0) == 'u')
-			return string + "ay";
-		else if(string.charAt(1) == 'h') {
-			pigLatin[string.length()-2] = string.charAt(0);
-			pigLatin[string.length()-1] = string.charAt(1);
-			for (int i = 2, j = 0; i < string.length(); i++, j++) {
-				pigLatin[j] = string.charAt(i);
+	/**
+	 * @param input
+	 * @return
+	 */
+	public String toPigLatin(String input) {
+		input = input.toLowerCase();
+		boolean space = true;
+		int wordStart = 0;
+		int wordEnd = 0;
+		StringBuilder toOutput = new StringBuilder("");
+		StringBuilder string = new StringBuilder("");
+		//TODO DONE
+		for(int j = 0; j<input.length(); j++) {
+			if(Character.isLetter(input.charAt(j)) && space == true) {
+				wordStart = j;
+				space = false;
+				System.out.println(wordStart);
 			}
-			return new String(pigLatin) + "ay";
-		}
-		//TODO SCH
-		else if(string.charAt(0) == 's' && string.charAt(1) == 'c' && string.charAt(0) == 'h') {
-			pigLatin[string.length()-3] = string.charAt(0);
-			pigLatin[string.length()-2] = string.charAt(1);
-			pigLatin[string.length()-1] = string.charAt(2);
-			for (int i = 3, j = 0; i < string.length(); i++, j++) {
-				pigLatin[j] = string.charAt(i);
+			else if((j == input.length() - 1 && input.charAt(j)!=' ') || input.charAt(j+1)==' ') {
+				space = true;
+				wordEnd = j+1;
+				System.out.println(wordEnd);
+				string.delete(0, string.length());
+				string.append(input.substring(wordStart, wordEnd));
+				string.setLength(wordEnd-wordStart);
+				String copy = new String(string.toString());
+				System.out.println(string.length());
+				if (string.charAt(0) == 'a' || string.charAt(0) == 'e' || string.charAt(0) == 'i' || string.charAt(0) == 'o'
+						|| string.charAt(0) == 'u') {
+					toOutput.append(string + "ay");
+				}
+				else if(string.charAt(1) == 'h' || (string.charAt(0) == 'q' && string.charAt(1) == 'u')) {
+					string.setCharAt(string.length()-2, copy.charAt(0));
+					string.setCharAt(string.length()-1, copy.charAt(1));
+					for (int i = 2, l = 0; i < string.length(); i++, l++) {
+						string.setCharAt(l, copy.charAt(i));
+					}
+					toOutput.append(new String(string) + "ay");
+				}
+				else if(string.charAt(0) == 's' && string.charAt(1) == 'c' && string.charAt(2) == 'h') {
+					string.setCharAt(string.length()-3, copy.charAt(0));
+					string.setCharAt(string.length()-2, copy.charAt(1));
+					string.setCharAt(string.length()-1, copy.charAt(2));
+					for (int i = 3, m = 0; i < string.length(); i++, m++) {
+						string.setCharAt(m, copy.charAt(i));
+					}
+					toOutput.append(new String(string) + "ay");
+				}
+				else {
+					for (int i = 1, k = 0; i < string.length(); i++, k++) {
+						string.setCharAt(k, copy.charAt(i));
+						string.setCharAt(string.length()-1, copy.charAt(0));
+					}
+					toOutput.append(new String(string) + "ay");
+				}
+				if(j!=input.length()-1) {
+					toOutput.append(" ");
+				}
 			}
-			return new String(pigLatin) + "ay";
 		}
-		else {
-			for (int i = 1, j = 0; i < string.length(); i++, j++) {
-				pigLatin[j] = string.charAt(i);
-				pigLatin[string.length()-1] = string.charAt(0);
-			}
-			return new String(pigLatin) + "ay";
-		}
+		return new String(toOutput);
 	}
 
 	/**
@@ -398,7 +451,7 @@ public class EvaluationService {
 	 * @return
 	 */
 	public List<Long> calculatePrimeFactorsOf(long l) {
-		List<long[]> list = new LinkedList<>();
+		List<Long> list = new ArrayList<>();
 		// TODO start over, doesn't work
 		return null;
 	}
@@ -727,17 +780,27 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int getSumOfMultiples(int i, int[] set) {
-		List<Integer> multiples = new LinkedList<>();
-		int k;
 		int sum = 0;
-		for(int j = 0; j < set.length; j++) {
-			for(k = 1; k < i; k++) {
-				if(k%set[j]==0) {
-					multiples.add(k);
+		boolean max = false;
+		int b = 1;
+		List<Integer> used = new ArrayList<>(); 
+		for(int a : set) {
+			do {
+				max = false;
+				if(a*b<i && !used.contains(a*b)) {
+					sum+=a*b;
+					used.add(a*b);
+					System.out.println(a + ", "+ b + ", " + sum);
 				}
-			}
+				else if(a*b>=i) {
+					b = 1;
+					max=true;
+					break;
+				}
+				b++;
+			}while(!max);
 		}
-		//find sum of multiples
+		//TODO DONE
 		return sum;
 	}
 
