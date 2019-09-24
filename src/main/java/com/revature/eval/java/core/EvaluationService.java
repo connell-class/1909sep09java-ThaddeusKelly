@@ -5,7 +5,7 @@ import java.util.*;
 
 public class EvaluationService {
 	
-	//Finished: 1, 2, 3, 4, 5, 8, 18
+	//Finished: 1, 2, 3, 4, 5, 7, 8, 9, 10, 12, 18
 
 	/**
 	 * 1. Without using the StringBuilder or StringBuffer class, write a method that
@@ -321,8 +321,38 @@ public class EvaluationService {
 		private List<T> sortedList;
 
 		public int indexOf(T t) {
-			// TODO Write an implementation for this method declaration
-			return 0;
+			// TODO DONE
+			if(!sortedList.contains(t)) {
+				throw new IllegalArgumentException("Item not found");
+			}
+			int counter = sortedList.size()/2;
+			int half = counter;
+			boolean found = false;
+			do {
+				System.out.println(t);
+				System.out.println(sortedList.get(counter));
+				if(t.equals(sortedList.get(counter))){
+					System.out.println("found");
+					found = true;
+					break;
+				}
+				else {
+					half = half/2;
+					if((int)t < (int)sortedList.get(counter)) {
+						if(half == 0)
+							counter--;
+						else
+							counter = counter-half;
+					}
+					else if((int)t > (int)sortedList.get(counter)) {
+						if(half == 0)
+							counter++;
+						else
+							counter = counter + half;
+					}
+				}
+			}while(!found);
+			return counter;
 		}
 
 		public BinarySearch(List<T> sortedList) {
@@ -436,8 +466,16 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isArmstrongNumber(int input) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		//TODO done
+		String number = new String(Integer.toString(input));
+		double finalNumber = 0;
+		for(int a = 0; a<number.length(); a++) {
+			finalNumber += Math.pow(Character.getNumericValue(number.charAt(a)), number.length());
+		}
+		if(finalNumber==input)
+			return true;
+		else
+			return false;
 	}
 
 	/**
@@ -450,10 +488,26 @@ public class EvaluationService {
 	 * @param l
 	 * @return
 	 */
+	//TODO done
 	public List<Long> calculatePrimeFactorsOf(long l) {
 		List<Long> list = new ArrayList<>();
-		// TODO start over, doesn't work
-		return null;
+		boolean finish = false;
+		int counter = 1;
+		long prime = 0L;
+		while(!finish) {
+			prime = (long) calculateNthPrime(counter);
+			if(l%prime==0 && l!=prime) {
+				counter = 0;
+				list.add(prime);
+				l /= prime;
+			}
+			if(l == prime) {
+				list.add(l);
+				finish = true;
+			}
+			counter++;
+		}
+		return list;
 	}
 
 	/**
@@ -491,7 +545,7 @@ public class EvaluationService {
 		}
 
 		public String rotate(String string) {
-			string = string.toLowerCase();
+			String input = string.toLowerCase();
 			char[] translated = new char[string.length()];
 			HashMap<Integer, Character> hm = new HashMap<>();
 			HashMap<Character, Integer> alphabet = new HashMap<>();
@@ -525,25 +579,34 @@ public class EvaluationService {
 			hm.put(25, 'y');
 			hm.put(26, 'z');
 			for (int u = 1; u <= 26; u++) {
-				System.out.println(hm.get(u));
 				alphabet.put(hm.get(u), u);
 			}
 			// creates a reversed reference of hm. I just didn't feel like typing all of
 			// those .puts backwards
 			for (int i = 1; i < 26; i++) {
-				if (i + key >= 26) {
-					letterKey = i + key - 26;
+				if (i - key <= 0) {
+					letterKey = i - key + 26;
 				} else {
-					letterKey = i + key;
+					letterKey = i - key;
 				}
 				hm.replace(letterKey, hm.get(i));
+				System.out.println(hm.get(i));
 			}
 			hm.replace(key, 'z');
 			for (int j = 0; j < string.length(); j++) {
-				translator = alphabet.get(string.charAt(j));
-				translated[j] = hm.get(translator);
+				if(Character.isAlphabetic(input.charAt(j))){
+					translator = alphabet.get(input.charAt(j));
+					translated[j] = hm.get(translator);
+				}
+				else
+					translated[j] = input.charAt(j);
 			}
-			//TODO needs to return each letter in its proper capitalization
+			for(int z=0; z<string.length(); z++) {
+				if(Character.isUpperCase(string.charAt(z))) {
+					translated[z]=Character.toUpperCase(translated[z]);
+				}
+			}
+			//TODO WHY IS THIS BREAKING?!
 			return new String(translated);
 		}
 
@@ -562,20 +625,29 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int calculateNthPrime(int i) {
-		// I don't know how to do this properly yet, so until then BRUTE FORCE TIME
-		int number = 2;
-		int prime = 0;
-		int divider = 2;
-		while (number != i) {
-			for (divider = 2; divider < number; divider++) {
-				if (number == 2 || number % divider != 0 && number == divider + 1) {
-					prime = number;
+		//TODO done
+		if (i<=0) {
+			throw new IllegalArgumentException("Number must be greater than 0");
+		}
+		int number = 0;
+		int counter = 0;
+		boolean isPrime = false;
+		do {
+			number++;
+			for(int divider = 2; divider<=number; divider++) {
+				if(number%divider==0 && number!=divider) {
 					break;
 				}
+				else if(divider == number) {
+					isPrime=true;
+				}
 			}
-			number++;
-		}
-		return prime;
+			if(isPrime) {
+				counter++;
+				isPrime=false;
+			}
+		}while(counter != i);
+		return number;
 	}
 
 	/**
@@ -843,26 +915,26 @@ public class EvaluationService {
 	public boolean isLuhnValid(String string) {
 		//list required
 		int finalValue = 0;
-		for (int i = 0; i < string.length(); i++) {
-			// testing for every other digit
-			if ((i+1) % 2 == 0) {
-				// testing if doubled number will be 10 or greater
-				if (Character.getNumericValue(string.charAt(i)) > 10) {
-					finalValue = finalValue + (Character.getNumericValue(string.charAt(i)) * 2) - 9;
-				} else {
-					finalValue = finalValue + (Character.getNumericValue(string.charAt(i)) * 2);
-				}
-			} else {
-				finalValue = finalValue + Character.getNumericValue(string.charAt(i));
+		int counter = 0;
+		List<Character> nextString = new ArrayList<>();
+		for(int i = 0; i < string.length();) {
+			if(string.charAt(i)!=' ') {
+				nextString.add(string.charAt(i));
 			}
-			System.out.println(finalValue);
 		}
-		if (finalValue % 10 == 0) {
+		for(char z:nextString) {
+			if((counter+1)%2==0) {
+				finalValue += 2*(Integer.valueOf(z));
+			}
+			else {
+				finalValue += (Integer.valueOf(z));
+			}
+			counter++;
+		}
+		if(finalValue % 10 == 0)
 			return true;
-		}
-		else {
+		else
 			return false;
-		}
 	}
 
 	/**
@@ -885,8 +957,43 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int solveWordProblem(String string) {
-		// TODO Write an implementation for this method declaration
-		return 0;
+		// TODO number start and number end not ending up in the right places
+		int num1 = 0;
+		int num2 = 0;
+		boolean isNumber = false;
+		int numberStart = 0;
+		int numberEnd = 0;
+		for(int i = 0; i < string.length(); i++) {
+			if(Character.isDigit(string.charAt(i)) || string.charAt(i) == '-') {
+				numberStart=i;
+				isNumber = true;
+				System.out.println(string.charAt(i));
+			}
+			if((string.charAt(i)==' ' || string.charAt(i)=='?') && isNumber == true) {
+				numberEnd=i;
+				isNumber = false;
+				if(num1!=0) {
+					num2=Integer.valueOf(string.substring(numberStart, numberEnd));
+				}
+				else {
+					num1=Integer.valueOf(string.substring(numberStart, numberEnd));
+				}
+			}
+		}
+		if(string.contains(" add ") || string.contains(" plus ")) {
+			return num1 + num2;
+		}
+		else if(string.contains(" minus ") || string.contains(" subtracted ")) {
+			return num1 - num2;
+		}
+		else if(string.contains(" multiplied ")) {
+			return num1 * num2;
+		}
+		else if(string.contains(" divided ")) {
+			return num1 / num2;
+		}
+		else
+			return 0;
 	}
 
 }
