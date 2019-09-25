@@ -1,11 +1,13 @@
 package com.revature.eval.java.core;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.*;
 
 public class EvaluationService {
 	
-	//Finished: 1, 2, 3, 4, 5, 7, 8, 9, 10, 12, 18
+	//Finished: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 16, 18, 19, 20
 
 	/**
 	 * 1. Without using the StringBuilder or StringBuffer class, write a method that
@@ -262,9 +264,11 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Map<String, Integer> wordCount(String string) {
+		//TODO Done
 		boolean space = true;
 		int wordStart = 0;
 		int wordEnd = 0;
+		int howMany = 0;
 		Map<String, Integer> counter = new HashMap<>();
 		for(int j = 0; j<string.length(); j++) {
 			if(Character.isLetter(string.charAt(j)) && space == true) {
@@ -272,14 +276,20 @@ public class EvaluationService {
 				space = false;
 				System.out.println(wordStart);
 			}
-			else if((j == string.length() - 1 && string.charAt(j)!=' ') || string.charAt(j+1)==' ') {
+			else if((j == string.length() - 1 && string.charAt(j)!=' ') || string.charAt(j+1)==' ' || string.charAt(j+1)==',') {
 				space = true;
 				wordEnd = j+1;
-					//TODO if that key is not already in counter:
-				counter.put(string.substring(wordStart, wordEnd), 1);
+				System.out.println(wordEnd);
+				System.out.println(string.substring(wordStart, wordEnd));
+				if(!counter.containsKey(string.substring(wordStart, wordEnd)))
+					counter.put(string.substring(wordStart, wordEnd), 1);
+				else {
+					howMany = counter.get(string.substring(wordStart, wordEnd));
+					counter.replace(string.substring(wordStart, wordEnd), howMany+1);
+				}
 			}
 		}
-		return null;
+		return counter;
 	}
 
 	/**
@@ -581,32 +591,8 @@ public class EvaluationService {
 			for (int u = 1; u <= 26; u++) {
 				alphabet.put(hm.get(u), u);
 			}
-			// creates a reversed reference of hm. I just didn't feel like typing all of
-			// those .puts backwards
-			for (int i = 1; i < 26; i++) {
-				if (i - key <= 0) {
-					letterKey = i - key + 26;
-				} else {
-					letterKey = i - key;
-				}
-				hm.replace(letterKey, hm.get(i));
-				System.out.println(hm.get(i));
-			}
-			hm.replace(key, 'z');
-			for (int j = 0; j < string.length(); j++) {
-				if(Character.isAlphabetic(input.charAt(j))){
-					translator = alphabet.get(input.charAt(j));
-					translated[j] = hm.get(translator);
-				}
-				else
-					translated[j] = input.charAt(j);
-			}
-			for(int z=0; z<string.length(); z++) {
-				if(Character.isUpperCase(string.charAt(z))) {
-					translated[z]=Character.toUpperCase(translated[z]);
-				}
-			}
-			//TODO WHY IS THIS BREAKING?!
+			// TODO redo this part
+			
 			return new String(translated);
 		}
 
@@ -684,6 +670,12 @@ public class EvaluationService {
 		 */
 		public static String encode(String string) {
 			string = string.toLowerCase();
+			ArrayList<Character> string1 = new ArrayList<>();
+			for(int j = 0; j<string.length(); j++) {
+				if(Character.isLetterOrDigit(string.charAt(j))) {
+					string1.add(string.charAt(j));
+				}
+			}
 			HashMap<Character, Integer> alphabet = new HashMap<>();
 			HashMap<Integer, Character> hm = new HashMap<>();
 			hm.put(1, 'a');
@@ -712,25 +704,22 @@ public class EvaluationService {
 			hm.put(24, 'x');
 			hm.put(25, 'y');
 			hm.put(26, 'z');
-			for (int u = 1; u <= 26; u++) {
-				alphabet.put(hm.get(u), u);
+			//reverses the alphabet
+			for (int u = 1, z = 26; u <= 26; u++, z--) {
+				alphabet.put(hm.get(z), u);
 			}
-			char[] translated = new char[string.length()];
-			for (int i = 0; i < string.length(); i++) {
-				if (alphabet.get(string.charAt(i)) <= 13) {
-					// below M: doubles the difference and adds it to the letter's value
-					translated[i] = hm
-							.get(alphabet.get(string.charAt(i)) + ((14 - alphabet.get(string.charAt(i))) * 2));
-				} else if (alphabet.get(string.charAt(i)) >= 14) {
-					// over N: doubles the difference and subtracts it from the letter's value
-					translated[i] = hm
-							.get(alphabet.get(string.charAt(i)) - ((alphabet.get(string.charAt(i)) - 13) * 2));
-				} else {
-					// everything else: leaves it be
-					translated[i] = string.charAt(i);
+			int i = 0;
+			StringBuilder translated = new StringBuilder("");
+			for(char c:string1) {
+				i++;
+				if(Character.isAlphabetic(c)) {
+					translated.append(hm.get(alphabet.get(c)));
 				}
-				// TODO it still needs to remove spaces and other symbols right?
-				// Guess it needs to be a list instead of an array
+				else {
+					translated.append(c);
+				}
+				if(i%5==0)
+					translated.append(' ');
 			}
 			return new String(translated);
 		}
@@ -772,7 +761,7 @@ public class EvaluationService {
 	public boolean isValidIsbn(String string) {
 		List<Integer> numbers = new LinkedList<>();
 		int sum = 0;
-		// add all numbers to the list
+		//TODO done
 		for (int i = 0; i < string.length(); i++) {
 			switch (string.charAt(i)) {
 			case '1':
@@ -798,10 +787,11 @@ public class EvaluationService {
 		if (numbers.size() != 10)
 			return false;
 		// otherwise, do the equation
-		for (int j = 0; j < numbers.size(); j++) {
-			sum = sum + (numbers.get(j) * j);
+		for (int j = 0, k = 10; j < numbers.size(); j++, k--) {
+			sum += (numbers.get(j) * k);
+			System.out.println(numbers.get(j) * k);
 		}
-		if (sum % 10 == 0)
+		if (sum % 11 == 0)
 			return true;
 		else
 			return false;
@@ -821,8 +811,18 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isPangram(String string) {
-		// TODO Write an implementation for this method declaration
-		return false;
+		//TODO Done
+		HashSet<Character> c = new HashSet<>();
+		string=string.toLowerCase();
+		for(int i = 0; i<string.length(); i++) {
+			if(Character.isAlphabetic(string.charAt(i)) && !c.contains(string.charAt(i))) {
+				c.add(string.charAt(i));
+			}
+		}
+		if(c.size()==26)
+			return true;
+		else
+			return false;
 	}
 
 	/**
@@ -834,8 +834,9 @@ public class EvaluationService {
 	 * @return
 	 */
 	public Temporal getGigasecondDate(Temporal given) {
-		// TODO Write an implementation for this method declaration
-		return null;
+		//TODO figure out why seconds aren't working
+		Temporal toReturn = given.plus(1000000000L, ChronoUnit.SECONDS);
+		return toReturn;
 	}
 
 	/**
@@ -913,21 +914,24 @@ public class EvaluationService {
 	 * @return
 	 */
 	public boolean isLuhnValid(String string) {
-		//list required
+		//TODO Done
 		int finalValue = 0;
 		int counter = 0;
 		List<Character> nextString = new ArrayList<>();
-		for(int i = 0; i < string.length();) {
+		for(int i = 0; i < string.length(); i++) {
 			if(string.charAt(i)!=' ') {
 				nextString.add(string.charAt(i));
 			}
 		}
 		for(char z:nextString) {
 			if((counter+1)%2==0) {
-				finalValue += 2*(Integer.valueOf(z));
+				if(2*(Character.getNumericValue(z))<10)
+					finalValue += 2*(Character.getNumericValue(z));
+				else
+					finalValue += (2*(Character.getNumericValue(z)))-9;
 			}
 			else {
-				finalValue += (Integer.valueOf(z));
+				finalValue += (Character.getNumericValue(z));
 			}
 			counter++;
 		}
@@ -957,17 +961,16 @@ public class EvaluationService {
 	 * @return
 	 */
 	public int solveWordProblem(String string) {
-		// TODO number start and number end not ending up in the right places
+		// TODO Done
 		int num1 = 0;
 		int num2 = 0;
 		boolean isNumber = false;
 		int numberStart = 0;
 		int numberEnd = 0;
 		for(int i = 0; i < string.length(); i++) {
-			if(Character.isDigit(string.charAt(i)) || string.charAt(i) == '-') {
+			if((Character.isDigit(string.charAt(i)) || string.charAt(i) == '-') && isNumber == false) {
 				numberStart=i;
 				isNumber = true;
-				System.out.println(string.charAt(i));
 			}
 			if((string.charAt(i)==' ' || string.charAt(i)=='?') && isNumber == true) {
 				numberEnd=i;
